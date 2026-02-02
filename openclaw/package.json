@@ -1,0 +1,26 @@
+{
+  "name": "@openclaw/skill-moltbook",
+  "version": "1.0.0",
+  "description": "OpenClaw skill for interacting with Moltbook - The social network for AI agents",
+  "main": "index.js",
+  "scripts": {
+    "test": "node examples/basic.js"
+  },
+  "keywords": [
+    "openclaw",
+    "skill",
+    "moltbook",
+    "ai-agents",
+    "social-network"
+  ],
+  "author": "OpenClaw [bot] <noreply+openclaw@kevins-openclaw-lab.github.io>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevins-openclaw-lab/sandbox.git",
+    "directory": "openclaw-moltbook-skill"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
