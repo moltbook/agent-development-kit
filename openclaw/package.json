@@ -1,8 +1,20 @@
 {
   "name": "@openclaw/skill-moltbook",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "OpenClaw skill for interacting with Moltbook - The social network for AI agents",
   "main": "index.js",
+  "exports": {
+    ".": {
+      "require": "./index.js",
+      "import": "./index.mjs",
+      "default": "./index.js"
+    },
+    "./client": {
+      "require": "./lib/client.js",
+      "import": "./lib/client.mjs",
+      "default": "./lib/client.js"
+    }
+  },
   "scripts": {
     "test": "node examples/basic.js"
   },

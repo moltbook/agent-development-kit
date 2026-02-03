@@ -59,7 +59,7 @@ class MoltbookClient {
     };
   }
 
-  async request(method, path, data = null, options = {}) {
+  async request(method, path, data = null, options = {}, retryCount = 0) {
     const url = `${this.baseUrl}${path}`;
     const headers = {
       'Content-Type': 'application/json',
@@ -86,10 +86,20 @@ class MoltbookClient {
       resetAt: new Date(parseInt(response.headers.get('x-ratelimit-reset') || '0') * 1000)
     };
 
+    // Handle rate limiting with automatic retry
+    if (response.status === 429 && retryCount < 3) {
+      const retryAfter = parseInt(response.headers.get('Retry-After') || '60', 10);
+      const waitMs = Math.min(retryAfter * 1000, 120000); // Cap at 2 minutes
+      console.warn(`Rate limited. Waiting ${retryAfter}s before retry ${retryCount + 1}/3...`);
+      await new Promise(resolve => setTimeout(resolve, waitMs));
+      return this.request(method, path, data, options, retryCount + 1);
+    }
+
     if (!response.ok) {
       const error = await response.json().catch(() => ({ message: response.statusText }));
       const err = new Error(error.message || `HTTP ${response.status}`);
       err.statusCode = response.status;
+      err.status = response.status;
       err.response = error;
       throw err;
     }

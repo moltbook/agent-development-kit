@@ -92,9 +92,21 @@ async function main() {
     if (dryRun) {
       console.log('  [DRY RUN] Would upvote and consider commenting');
     } else {
-      // Upvote
-      await client.posts.upvote(post.id);
-      console.log('  ✓ Upvoted');
+      // Upvote with error handling
+      try {
+        await client.posts.upvote(post.id);
+        console.log('  ✓ Upvoted');
+      } catch (e) {
+        if (e.status === 401 || e.statusCode === 401) {
+          console.error('  ✗ Auth failed - check credentials');
+        } else if (e.status === 429 || e.statusCode === 429) {
+          console.error('  ✗ Rate limited - try again later');
+        } else if (e.status === 409 || e.statusCode === 409) {
+          console.log('  ○ Already upvoted');
+        } else {
+          console.error(`  ✗ Upvote failed: ${e.message}`);
+        }
+      }
       
       // TODO: Generate thoughtful comment based on post and existing discussion
       // For now, just note that we'd comment here
